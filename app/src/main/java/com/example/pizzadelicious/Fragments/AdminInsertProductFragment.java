@@ -22,6 +22,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.example.pizzadelicious.Models.JSONResponseProduct;
@@ -47,6 +49,8 @@ public class AdminInsertProductFragment extends Fragment {
     Button btn_chooseImage, btn_insert;
     ImageButton btn_back;
     ImageView imageView;
+    RadioButton radioButton_pizza, getRadioButton_cake;
+    RadioGroup radioGroup;
 
     String IMAGE_PATH = "";
     Uri saveUri;
@@ -79,11 +83,15 @@ public class AdminInsertProductFragment extends Fragment {
         }
         et_name = view.findViewById(R.id.et_name);
         et_price = view.findViewById(R.id.et_price);
-        et_type = view.findViewById(R.id.et_type);
+//        et_type = view.findViewById(R.id.et_type);
         btn_chooseImage = view.findViewById(R.id.btn_chooseImage);
         btn_insert = view.findViewById(R.id.btn_insert);
         btn_back = view.findViewById(R.id.btn_back);
         imageView = view.findViewById(R.id.imageView);
+
+        radioButton_pizza = view.findViewById(R.id.radioPizza);
+        getRadioButton_cake = view.findViewById(R.id.radioCake);
+        radioGroup = view.findViewById(R.id.radio_Gr);
     }
 
     private void setEvent() {
@@ -128,10 +136,12 @@ public class AdminInsertProductFragment extends Fragment {
         btn_insert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!et_name.getText().toString().equals("") && !et_price.getText().toString().equals("")
-                        && !et_type.getText().toString().equals("") && !IMAGE_PATH.equals("")) {
+//                if (!et_name.getText().toString().equals("") && !et_price.getText().toString().equals("")
+//                        && !et_type.getText().toString().equals("") && !IMAGE_PATH.equals("")) {
+                if ( !IMAGE_PATH.equals("")) {
 
-                    if (et_type.getText().toString().equals("pizza") || et_type.getText().toString().equals("Pizza")) {
+//                    if (et_type.getText().toString().equals("pizza") || et_type.getText().toString().equals("Pizza")) {
+                    if (radioButton_pizza.isChecked()==true) {
 
                         final ProgressDialog progressDialog;
                         progressDialog = new ProgressDialog(getContext());
@@ -167,7 +177,7 @@ public class AdminInsertProductFragment extends Fragment {
                                 Toast.makeText(getActivity(), "Insert Product failed!", Toast.LENGTH_SHORT).show();
                             }
                         });
-                    } else if (et_type.getText().toString().equals("cake") || et_type.getText().toString().equals("Cake")) {
+                    } else if (getRadioButton_cake.isChecked()==true) {
 
                         final ProgressDialog progressDialog;
                         progressDialog = new ProgressDialog(getContext());
@@ -238,4 +248,5 @@ public class AdminInsertProductFragment extends Fragment {
 
         }
     }
+
 }

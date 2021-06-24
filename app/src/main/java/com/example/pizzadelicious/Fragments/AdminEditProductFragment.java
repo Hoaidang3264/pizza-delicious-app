@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -46,6 +48,9 @@ public class AdminEditProductFragment extends Fragment {
     ImageButton btn_back;
     String productId;
     String productTypeId = "";
+
+    RadioButton radioButton_pizza, getRadioButton_cake;
+    RadioGroup radioGroup;
     private ArrayList<Product> products;
 
     public AdminEditProductFragment() {
@@ -75,8 +80,11 @@ public class AdminEditProductFragment extends Fragment {
             ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         }
 
+        radioButton_pizza = view.findViewById(R.id.radioPizza);
+        getRadioButton_cake = view.findViewById(R.id.radioCake);
+        radioGroup = view.findViewById(R.id.radio_Gr);
         et_name = view.findViewById(R.id.et_name);
-        et_type = view.findViewById(R.id.et_type);
+//        et_type = view.findViewById(R.id.et_type);
         et_price = view.findViewById(R.id.et_price);
         imageProduct = view.findViewById(R.id.imageProduct);
 
@@ -94,6 +102,18 @@ public class AdminEditProductFragment extends Fragment {
         return view;
     }
 
+    String checkRadio(String id){
+        if(id.compareTo("1")==0){
+            radioButton_pizza.setChecked(true);
+            return id;
+        }
+        else if(id.compareTo("2")==0) {
+            getRadioButton_cake.setChecked(true);
+            return id;
+        }
+        return "";
+    }
+
     private void load(String productId) {
         service.getProductById("" + productId).enqueue(new Callback<JSONResponseProduct>() {
             @Override
@@ -103,16 +123,21 @@ public class AdminEditProductFragment extends Fragment {
                 Log.d("idP", "onResponse: " + products.get(0).getId());
                 et_name.setText(products.get(0).getName());
                 et_price.setText(products.get(0).getPrice());
-                et_type.setText(products.get(0).getType().getId());
+//                et_type.setText(products.get(0).getType().getId());
                 productTypeId = products.get(0).getType().getId();
+                checkRadio(productTypeId);
                 Picasso.get().load("" + products.get(0).getImage())
                         .into(imageProduct);
 
                 btn_save.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        String idProductTemp = "";
+                        if(radioButton_pizza.isChecked()==true){
+                            idProductTemp += "1";
+                        }else idProductTemp += "2";
                         service.updateProduct(""+ productId, "" + et_name.getText().toString(), "" + et_price.getText().toString(),
-                                et_type.getText().toString()).enqueue(new Callback<JSONResponseProduct>() {
+                                idProductTemp).enqueue(new Callback<JSONResponseProduct>() {
                             @Override
                             public void onResponse(Call<JSONResponseProduct> call, Response<JSONResponseProduct> response) {
                                 Toast.makeText(getActivity(), "Updated   successfully!", Toast.LENGTH_SHORT).show();
